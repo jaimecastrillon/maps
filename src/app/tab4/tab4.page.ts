@@ -3,22 +3,34 @@ import { Marcador } from "../class/marcador";
 import { Storage } from "@ionic/storage";
 
 @Component({
-  selector: "app-tab2",
-  templateUrl: "tab2.page.html",
-  styleUrls: ["tab2.page.scss"]
+  selector: "app-tab4",
+  templateUrl: "tab4.page.html",
+  styleUrls: ["tab4.page.scss"]
 })
-export class Tab2Page implements OnInit {
+export class Tab4Page implements OnInit {
   marcadores: Marcador[] = [];
   lat = 4.60972222222;
   lng = -74.0816666667;
+  paths: Array<any> = [];
+  polygon = false;
+  latA: number;
+  latB: number;
+  lngA: number;
+  lngB: number;
 
   constructor(private storage: Storage) {}
 
   ngOnInit() {
-    this.storage.get("points").then(data => {
-      const marcador: Marcador = JSON.parse(data);
+    this.storage.get("polygons").then(val => {
+      const marcador: Marcador = JSON.parse(val);
       for (let i in marcador) {
         this.marcadores.push(marcador[i]);
+        this.paths.push(marcador[i]);
+      }
+
+      if (this.marcadores.length >= 3) {
+        this.paths = this.marcadores;
+        this.polygon = true;
       }
     });
   }
@@ -35,6 +47,15 @@ export class Tab2Page implements OnInit {
       evento.coords.title,
       evento.coords.description
     );
-    this.storage.set("points", JSON.stringify(this.marcadores));
+
+    if (this.marcadores.length % 2) {
+      this.paths = this.marcadores;
+      this.polygon = true;
+    } else {
+      this.polygon = false;
+    }
+
+    //Almacenamiento en local storage
+    this.storage.set("polygons", JSON.stringify(this.marcadores));
   }
 }

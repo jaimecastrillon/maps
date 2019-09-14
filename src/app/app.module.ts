@@ -16,13 +16,13 @@ import { IonicStorageModule } from '@ionic/storage';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
+    BrowserModule,
+    IonicModule.forRoot(),
     AppRoutingModule,
     IonicStorageModule.forRoot({
       name: 'coordenadas',
-driverOrder: ['indexeddb']
-    })
+      driverOrder: ['localstorage', 'websql', 'indexeddb']
+    }),
   ],
   providers: [
     StatusBar,
